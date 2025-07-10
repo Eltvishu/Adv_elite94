@@ -269,7 +269,7 @@ form.addEventListener("submit", (e) => {
     selectedRoles.push("Role");
   }
 
-  const radius = 140;
+  const radius = 160;
   const angleStep = 360 / selectedRoles.length;
 
   selectedRoles.forEach((role, index) => {
@@ -277,7 +277,7 @@ form.addEventListener("submit", (e) => {
     pill.className = "role-pill";
     pill.textContent = role;
 
-    const angle = angleStep * index - 90;
+    const angle = angleStep * index - 120;
     const rad = (angle * Math.PI) / 180;
 
     const x = Math.cos(rad) * radius;
