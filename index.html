@@ -210,6 +210,7 @@
         </select>
 
         <button type="submit">Generate</button>
+        <button type="button" id="downloadBtn">Download Image</button>
       </form>
     </div>
 
@@ -305,6 +306,22 @@ form.addEventListener("submit", (e) => {
   handleBox.textContent = handleText;
   outputBox.appendChild(handleBox);
 });
+    const downloadBtn = document.getElementById("downloadBtn");
+
+downloadBtn.addEventListener("click", () => {
+  html2canvas(outputBox, {
+    backgroundColor: null,
+    useCORS: true,
+    scale: 2 // High-res image
+  }).then((canvas) => {
+    const link = document.createElement("a");
+    link.download = "verified-berry.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+});
+
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </body>
 </html>
