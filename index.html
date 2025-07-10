@@ -159,8 +159,13 @@
   opacity: 0.9;
   z-index: 5;
 }
-
-    /* Ensure output stays proportional on narrow screens */
+#imageCanvas {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+}
+ /* Ensure output stays proportional on narrow screens */
    @media (max-width: 767px) {
   .pfp-wrap {
     width: 120px;
@@ -215,10 +220,13 @@
     </div>
 
     <!-- Output Box -->
-    <div class="box" id="outputBox">
-      <img id="template" src="template.jpg" alt="Verified Berry Template" />
+   <div class="box" id="outputBox">
+  <div id="imageCanvas">
+    <img id="template" src="template.jpg" alt="Verified Berry Template" />
+    <!-- PFP, handle, roles will be appended here -->
+  </div>
+</div>
       <!-- Dynamic elements inserted by JS -->
-    </div>
     <footer style="text-align: center; padding: 1rem; font-size: 0.9rem; color: #666;">
   Made by
   <a href="https://x.com/Adv_Elite94" target="_blank" style="color: #ff4d8b; text-decoration: none; font-weight: bold;">
@@ -228,17 +236,18 @@
   </div>
 
   <script>
+    const imageCanvas = document.getElementById("imageCanvas");
     const form = document.getElementById("berryForm");
     const pfpInput = document.getElementById("pfpInput");
     const rolesSelect = document.getElementById("roles");
     const xHandleInput = document.getElementById("xHandle");
     const outputBox = document.getElementById("outputBox");
 
-    function clearDynamic() {
-      outputBox.querySelectorAll(".pfp-wrap, .handle-box, .roles-box").forEach((el) =>
-        el.remove()
-      );
-    }
+function clearDynamic() {
+  imageCanvas.querySelectorAll(".pfp-wrap, .handle-box, .roles-box").forEach((el) =>
+    el.remove()
+  );
+}
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -262,7 +271,7 @@ form.addEventListener("submit", (e) => {
     pfpImg.src = "https://placehold.co/150x150";
   }
 
-  outputBox.appendChild(pfpWrap);
+  imageCanvas.appendChild(pfpWrap);
 
   /* ---------- HANDLE ROLES ---------- */
   const rolesBox = document.createElement("div");
@@ -294,25 +303,25 @@ form.addEventListener("submit", (e) => {
     pill.style.top = `calc(50% + ${y}px)`;
     pill.style.transform = "translate(-50%, -50%)";
 
-    rolesBox.appendChild(pill);
+   imageCanvas.appendChild(pill);
   });
 
-  outputBox.appendChild(rolesBox);
+imageCanvas.appendChild(rolesBox);
 
   /* ---------- HANDLE X HANDLE ---------- */
   const handleBox = document.createElement("div");
   handleBox.className = "handle-box";
   const handleText = xHandleInput.value.trim() || "@yourhandle";
   handleBox.textContent = handleText;
-  outputBox.appendChild(handleBox);
+imageCanvas.appendChild(handleBox);
 });
     const downloadBtn = document.getElementById("downloadBtn");
 
 downloadBtn.addEventListener("click", () => {
-  html2canvas(outputBox, {
+  html2canvas(imageCanvas, {
     backgroundColor: null,
     useCORS: true,
-    scale: 2 // High-res image
+    scale: 2
   }).then((canvas) => {
     const link = document.createElement("a");
     link.download = "verified-berry.png";
