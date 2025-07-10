@@ -293,8 +293,12 @@ selectedRoles.forEach((role, index) =>const angleStep = 360 / selectedRoles.leng
 const radius = 100;
 
 selectedRoles.forEach((role, index) => {
-  const pill = document.createElement(\"div\");
-  pill.className = \"role-pill\";
+const angleStep = 360 / selectedRoles.length;
+const radius = 100;
+
+selectedRoles.forEach((role, index) => {
+  const pill = document.createElement("div");
+  pill.className = "role-pill";
   pill.textContent = role;
 
   const angle = angleStep * index - 90; // start from top
@@ -305,7 +309,7 @@ selectedRoles.forEach((role, index) => {
 
   pill.style.left = `calc(50% + ${x}px)`;
   pill.style.top = `calc(50% + ${y}px)`;
-  pill.style.transform = 'translate(-50%, -50%)';
+  pill.style.transform = "translate(-50%, -50%)";
 
   rolesBox.appendChild(pill);
 });
