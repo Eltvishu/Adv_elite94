@@ -137,13 +137,13 @@
     /* Roles grid container */
  .roles-box {
   position: absolute;
-  top: 110px; /* same as PFP top */
+  top: 110px; /* same as PFP */
   left: 50%;
   transform: translateX(-50%);
-  width: 150px;
-  height: 150px;
-  pointer-events: none; /* so roles don't block interaction */
-  position: absolute;
+  width: 300px; /* enough space around PFP */
+  height: 300px;
+  pointer-events: none;
+   z-index: 5;
 }
 .role-pill {
   font-size: 0.8rem;
