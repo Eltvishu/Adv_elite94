@@ -161,22 +161,28 @@
 }
 
     /* Ensure output stays proportional on narrow screens */
-    @media (max-width: 767px) {
-      .pfp-wrap {
-        width: 120px;
-        height: 120px;
-        top: 90px;
-      }
+   @media (max-width: 767px) {
+  .pfp-wrap {
+    width: 120px;
+    height: 120px;
+    top: 90px;
+  }
 
-      .handle-box {
-        font-size: 1.3rem;
-        top: 230px;
-      }
+  .handle-box {
+    font-size: 1.3rem;
+    top: 230px;
+  }
 
-      .roles-box {
-        top: 300px;
-        gap: 0.4rem;
-      }
+  .roles-box {
+    top: 90px; /* Same as PFP */
+    width: 200px;
+    height: 200px;
+  }
+
+  .role-pill {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.6rem;
+   }
     }
   </style>
 </head>
@@ -269,7 +275,7 @@ form.addEventListener("submit", (e) => {
     selectedRoles.push("Role");
   }
 
-  const radius = 160;
+ const radius = window.innerWidth < 768 ? 100 : 160;
   const angleStep = 360 / selectedRoles.length;
 
   selectedRoles.forEach((role, index) => {
