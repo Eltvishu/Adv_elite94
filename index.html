@@ -139,6 +139,9 @@
       grid-auto-flow: column;
       grid-template-rows: repeat(3, auto);
       gap: 0.5rem;
+      max-width: 90%;            /* Ensures it doesn't overflow image */
+      overflow-wrap: break-word;
+      justify-content: center;
     }
 
     .role-pill {
@@ -151,6 +154,12 @@
       text-align: center;
       backdrop-filter: blur(4px);
       opacity: 0.9;
+      .role-pill {
+       font-size: 0.85rem;         /* slightly smaller */
+       padding: 0.4rem 0.8rem;
+       text-align: center;
+}
+
     }
 
     /* Ensure output stays proportional on narrow screens */
