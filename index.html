@@ -127,13 +127,13 @@
       border-radius: 0.6rem;
       font-size: 1.6rem;
       font-weight: 600;
-       max-width: 90%;
+      max-width: 90%;
       overflow: hidden;
       text-overflow: ellipsis;
-     white-space: nowrap;
-     box-sizing: border-box;
-    }
-
+      white-space: nowrap;
+      box-sizing: border-box;
+      z-index: 6;
+}
     /* Roles grid container */
 .roles-box {
   position: absolute;
@@ -144,6 +144,9 @@
   height: 300px;
   pointer-events: none;
   z-index: 5;
+
+  /* Optional: for debug */
+  /* background: rgba(255, 0, 0, 0.05); */
 }
 .role-pill {
   position: absolute;
@@ -258,7 +261,7 @@
 
       outputBox.appendChild(pfpWrap);
 
-    /* ---------- HANDLE ROLES ---------- */
+ /* ---------- HANDLE ROLES ---------- */
 const rolesBox = document.createElement("div");
 rolesBox.className = "roles-box";
 
@@ -270,15 +273,16 @@ if (selectedRoles.length === 0) {
   selectedRoles.push("Role");
 }
 
+// Radius increased so roles are placed OUTSIDE the PFP
+const radius = 100 + 40; // 100 = half PFP, +40 = gap
 const angleStep = 360 / selectedRoles.length;
-const radius = 100;
 
 selectedRoles.forEach((role, index) => {
   const pill = document.createElement("div");
   pill.className = "role-pill";
   pill.textContent = role;
 
-  const angle = angleStep * index - 90; // start from top
+  const angle = angleStep * index - 90;
   const rad = (angle * Math.PI) / 180;
 
   const x = Math.cos(rad) * radius;
@@ -290,6 +294,7 @@ selectedRoles.forEach((role, index) => {
 
   rolesBox.appendChild(pill);
 });
+
 outputBox.appendChild(rolesBox);
     });
   </script>
