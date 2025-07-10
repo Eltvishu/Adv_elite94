@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verified Berry Generator</title>
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #ff4d8b, #ff006e);
+    }
+
+    /* ---------- Layout ---------- */
+    body {
+      margin: 0;
+      font-family: "Inter", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+    }
+
+    .box {
+      flex: 1;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    /* ---------- Input Box ---------- */
+    #inputBox {
+      background: #fafafa;
+      border-right: 1px solid #e0e0e0;
+    }
+
+    form label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    form input[type="text"],
+    form select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+    }
+
+    form input[type="file"] {
+      margin-top: 0.25rem;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      color: #fff;
+      background: var(--primary-gradient);
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    /* ---------- Output Box ---------- */
+    #outputBox {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+    }
+
+    /* Base template image */
+    #template {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* PFP wrapper with gradient border */
+    .pfp-wrap {
+      position: absolute;
+      top: 110px; /* adjust depending on template */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      padding: 5px; /* thickness of gradient border */
+      background: var(--primary-gradient);
+    }
+
+    .pfp-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* X handle */
+    .handle-box {
+      position: absolute;
+      top: 280px; /* adjust depending on template */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(6px);
+      padding: 0.4rem 1rem;
+      border-radius: 0.6rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+    }
+
+    /* Roles grid container */
+    .roles-box {
+      position: absolute;
+      top: 350px; /* adjust depending on template */
+      left: 50%;
+      transform: translateX(-50%);
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-rows: repeat(3, auto);
+      gap: 0.5rem;
+    }
+
+    .role-pill {
+      padding: 0.5rem 1rem;
+      background: var(--primary-gradient);
+      color: #fff;
+      border-radius: 0.6rem;
+      font-weight: 600;
+      white-space: nowrap;
+      text-align: center;
+      backdrop-filter: blur(4px);
+      opacity: 0.9;
+    }
+
+    /* Ensure output stays proportional on narrow screens */
+    @media (max-width: 767px) {
+      .pfp-wrap {
+        width: 120px;
+        height: 120px;
+        top: 90px;
+      }
+
+      .handle-box {
+        font-size: 1.3rem;
+        top: 230px;
+      }
+
+      .roles-box {
+        top: 300px;
+        gap: 0.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Input Box -->
+    <div class="box" id="inputBox">
+      <h2>Customize Your Berry Badge</h2>
+      <form id="berryForm">
+        <label for="xHandle">X Handle</label>
+        <input type="text" id="xHandle" placeholder="@yourhandle" />
+
+        <label for="pfpInput">Profile Picture (PFP)</label>
+        <input type="file" id="pfpInput" accept="image/*" />
+
+        <label for="roles">Select Roles (Ctrl/Cmd + click for multiple)</label>
+        <select id="roles" multiple size="7">
+          <option>Prover</option>
+          <option>Dev</option>
+          <option>Berry</option>
+          <option>Berry Harvester</option>
+          <option>Berry Events</option>
+          <option>Social Berry</option>
+          <option>Early Berry</option>
+        </select>
+
+        <button type="submit">Generate</button>
+      </form>
+    </div>
+
+    <!-- Output Box -->
+    <div class="box" id="outputBox">
+      <img id="template" src="template.jpg" alt="Verified Berry Template" />
+      <!-- Dynamic elements inserted by JS -->
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("berryForm");
+    const pfpInput = document.getElementById("pfpInput");
+    const xHandleInput = document.getElementById("xHandle");
+    const rolesSelect = document.getElementById("roles");
+    const outputBox = document.getElementById("outputBox");
+
+    function clearDynamic() {
+      outputBox.querySelectorAll(".pfp-wrap, .handle-box, .roles-box").forEach((el) =>
+        el.remove()
+      );
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      clearDynamic();
+
+      /* ---------- HANDLE PFP ---------- */
+      const pfpWrap = document.createElement("div");
+      pfpWrap.className = "pfp-wrap";
+      const pfpImg = document.createElement("img");
+      pfpImg.alt = "PFP";
+      pfpWrap.appendChild(pfpImg);
+
+      const file = pfpInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          pfpImg.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // fallback placeholder (optional)
+        pfpImg.src = "https://placehold.co/150x150";
+      }
+
+      outputBox.appendChild(pfpWrap);
+
+      /* ---------- HANDLE X HANDLE ---------- */
+      const handleBox = document.createElement("div");
+      handleBox.className = "handle-box";
+      const handleText = xHandleInput.value.trim() || "@yourhandle";
+      handleBox.textContent = handleText;
+      outputBox.appendChild(handleBox);
+
+      /* ---------- HANDLE ROLES ---------- */
+      const rolesBox = document.createElement("div");
+      rolesBox.className = "roles-box";
+
+      const selectedRoles = Array.from(rolesSelect.selectedOptions).map((o) =>
+        o.value.trim()
+      );
+
+      if (selectedRoles.length === 0) {
+        selectedRoles.push("Role");
+      }
+
+      selectedRoles.forEach((role) => {
+        const pill = document.createElement("div");
+        pill.className = "role-pill";
+        pill.textContent = role;
+        rolesBox.appendChild(pill);
+      });
+
+      outputBox.appendChild(rolesBox);
+    });
+  </script>
+</body>
+</html>
