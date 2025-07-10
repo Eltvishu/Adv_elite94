@@ -93,8 +93,26 @@
       height: auto;
       display: block;
     }
-
-    /* PFP wrapper with gradient border */
+    
+    /* X handle */
+    .handle-box {
+  position: absolute;
+  top: 280px; /* adjust for your template height */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(6px);
+  padding: 0.4rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  z-index: 10; /* 🟢 Ensure it's above roles and PFP */
+}   /* PFP wrapper with gradient border */
     .pfp-wrap {
       position: absolute;
       top: 110px; /* adjust depending on template */
@@ -114,27 +132,7 @@
       border-radius: 50%;
       display: block;
     }
-
-    /* X handle */
-    .handle-box {
-      position: absolute;
-      top: 280px; /* adjust depending on template */
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.45);
-      backdrop-filter: blur(6px);
-      padding: 0.4rem 1rem;
-      border-radius: 0.6rem;
-      font-size: 1.6rem;
-      font-weight: 600;
-      max-width: 90%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      box-sizing: border-box;
-      z-index: 6;
-}
-    /* Roles grid container */
+   /* Roles grid container */
 .roles-box {
   position: absolute;
   top: 110px;
@@ -225,8 +223,8 @@
   <script>
     const form = document.getElementById("berryForm");
     const pfpInput = document.getElementById("pfpInput");
-    const xHandleInput = document.getElementById("xHandle");
     const rolesSelect = document.getElementById("roles");
+    const xHandleInput = document.getElementById("xHandle");
     const outputBox = document.getElementById("outputBox");
 
     function clearDynamic() {
@@ -234,69 +232,73 @@
         el.remove()
       );
     }
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
+  clearDynamic();
 
-      clearDynamic();
+  /* ---------- HANDLE PFP ---------- */
+  const pfpWrap = document.createElement("div");
+  pfpWrap.className = "pfp-wrap";
+  const pfpImg = document.createElement("img");
+  pfpImg.alt = "PFP";
+  pfpWrap.appendChild(pfpImg);
 
-      /* ---------- HANDLE PFP ---------- */
-      const pfpWrap = document.createElement("div");
-      pfpWrap.className = "pfp-wrap";
-      const pfpImg = document.createElement("img");
-      pfpImg.alt = "PFP";
-      pfpWrap.appendChild(pfpImg);
+  const file = pfpInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      pfpImg.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    pfpImg.src = "https://placehold.co/150x150";
+  }
 
-      const file = pfpInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          pfpImg.src = reader.result;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        // fallback placeholder (optional)
-        pfpImg.src = "https://placehold.co/150x150";
-      }
+  outputBox.appendChild(pfpWrap);
 
-      outputBox.appendChild(pfpWrap);
+  /* ---------- HANDLE ROLES ---------- */
+  const rolesBox = document.createElement("div");
+  rolesBox.className = "roles-box";
 
- /* ---------- HANDLE ROLES ---------- */
-const rolesBox = document.createElement("div");
-rolesBox.className = "roles-box";
+  const selectedRoles = Array.from(rolesSelect.selectedOptions).map((o) =>
+    o.value.trim()
+  );
 
-const selectedRoles = Array.from(rolesSelect.selectedOptions).map((o) =>
-  o.value.trim()
-);
+  if (selectedRoles.length === 0) {
+    selectedRoles.push("Role");
+  }
 
-if (selectedRoles.length === 0) {
-  selectedRoles.push("Role");
-}
+  const radius = 140;
+  const angleStep = 360 / selectedRoles.length;
 
-// Radius increased so roles are placed OUTSIDE the PFP
-const radius = 100 + 40; // 100 = half PFP, +40 = gap
-const angleStep = 360 / selectedRoles.length;
+  selectedRoles.forEach((role, index) => {
+    const pill = document.createElement("div");
+    pill.className = "role-pill";
+    pill.textContent = role;
 
-selectedRoles.forEach((role, index) => {
-  const pill = document.createElement("div");
-  pill.className = "role-pill";
-  pill.textContent = role;
+    const angle = angleStep * index - 90;
+    const rad = (angle * Math.PI) / 180;
 
-  const angle = angleStep * index - 90;
-  const rad = (angle * Math.PI) / 180;
+    const x = Math.cos(rad) * radius;
+    const y = Math.sin(rad) * radius;
 
-  const x = Math.cos(rad) * radius;
-  const y = Math.sin(rad) * radius;
+    pill.style.left = `calc(50% + ${x}px)`;
+    pill.style.top = `calc(50% + ${y}px)`;
+    pill.style.transform = "translate(-50%, -50%)";
 
-  pill.style.left = `calc(50% + ${x}px)`;
-  pill.style.top = `calc(50% + ${y}px)`;
-  pill.style.transform = "translate(-50%, -50%)";
+    rolesBox.appendChild(pill);
+  });
 
-  rolesBox.appendChild(pill);
+  outputBox.appendChild(rolesBox);
+
+  /* ---------- HANDLE X HANDLE ---------- */
+  const handleBox = document.createElement("div");
+  handleBox.className = "handle-box";
+  const handleText = xHandleInput.value.trim() || "@yourhandle";
+  handleBox.textContent = handleText;
+  outputBox.appendChild(handleBox);
 });
-
-outputBox.appendChild(rolesBox);
-    });
   </script>
 </body>
 </html>
