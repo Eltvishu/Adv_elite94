@@ -258,41 +258,18 @@
 
       outputBox.appendChild(pfpWrap);
 
-      /* ---------- HANDLE X HANDLE ---------- */
-      const handleBox = document.createElement("div");
-      handleBox.className = "handle-box";
-      const handleText = xHandleInput.value.trim() || "@yourhandle";
-      handleBox.textContent = handleText;
-      outputBox.appendChild(handleBox);
+    /* ---------- HANDLE ROLES ---------- */
+const rolesBox = document.createElement("div");
+rolesBox.className = "roles-box";
 
-      /* ---------- HANDLE ROLES ---------- */
-      const rolesBox = document.createElement("div");
-      rolesBox.className = "roles-box";
+const selectedRoles = Array.from(rolesSelect.selectedOptions).map((o) =>
+  o.value.trim()
+);
 
-      const selectedRoles = Array.from(rolesSelect.selectedOptions).map((o) =>
-        o.value.trim()
-      );
+if (selectedRoles.length === 0) {
+  selectedRoles.push("Role");
+}
 
-      if (selectedRoles.length === 0) {
-        selectedRoles.push("Role");
-      }
-
-      selectedRoles.forEach((role) => {
-       const positions = [
-  { top: '-10px', left: '50%', transform: 'translateX(-50%)' },  // top
-  { top: '50%', left: '160px', transform: 'translateY(-50%)' },  // right
-  { bottom: '-10px', left: '50%', transform: 'translateX(-50%)' }, // bottom
-  { top: '50%', left: '-160px', transform: 'translateY(-50%)' }, // left
-  { top: '-20px', left: '-20px' }, // top-left
-  { top: '-20px', right: '-20px' }, // top-right
-  { bottom: '-20px', left: '-20px' }, // bottom-left
-  { bottom: '-20px', right: '-20px' }, // bottom-right
-];
-
-selectedRoles.forEach((role, index) =>const angleStep = 360 / selectedRoles.length;
-const radius = 100;
-
-selectedRoles.forEach((role, index) => {
 const angleStep = 360 / selectedRoles.length;
 const radius = 100;
 
@@ -313,7 +290,7 @@ selectedRoles.forEach((role, index) => {
 
   rolesBox.appendChild(pill);
 });
-  outputBox.appendChild(rolesBox);
+outputBox.appendChild(rolesBox);
     });
   </script>
 </body>
