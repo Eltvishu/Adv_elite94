@@ -135,22 +135,16 @@
     }
 
     /* Roles grid container */
-  .roles-box {
+ .roles-box {
   position: absolute;
-  top: 350px;
+  top: 110px; /* same as PFP top */
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  max-width: 90%;              /* Keeps it inside image width */
-  padding: 0 0.5rem;
-  box-sizing: border-box;
+  width: 150px;
+  height: 150px;
+  pointer-events: none; /* so roles don't block interaction */
+  position: absolute;
 }
-
-
-
 .role-pill {
   font-size: 0.8rem;
   padding: 0.4rem 0.8rem;
@@ -283,12 +277,31 @@
       }
 
       selectedRoles.forEach((role) => {
-        const pill = document.createElement("div");
-        pill.className = "role-pill";
-        pill.textContent = role;
-        rolesBox.appendChild(pill);
-      });
+       const positions = [
+  { top: '-10px', left: '50%', transform: 'translateX(-50%)' },  // top
+  { top: '50%', left: '160px', transform: 'translateY(-50%)' },  // right
+  { bottom: '-10px', left: '50%', transform: 'translateX(-50%)' }, // bottom
+  { top: '50%', left: '-160px', transform: 'translateY(-50%)' }, // left
+  { top: '-20px', left: '-20px' }, // top-left
+  { top: '-20px', right: '-20px' }, // top-right
+  { bottom: '-20px', left: '-20px' }, // bottom-left
+  { bottom: '-20px', right: '-20px' }, // bottom-right
+];
 
+selectedRoles.forEach((role, index) => {
+  const pill = document.createElement(\"div\");
+  pill.className = \"role-pill\";
+  pill.textContent = role;
+
+  // custom position
+  const pos = positions[index] || { top: `${10 + index * 20}px`, left: '50%', transform: 'translateX(-50%)' };
+  Object.assign(pill.style, {
+    position: 'absolute',
+    ...pos,
+  });
+
+  rolesBox.appendChild(pill);
+});
       outputBox.appendChild(rolesBox);
     });
   </script>
